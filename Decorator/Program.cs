@@ -2,103 +2,104 @@
 
 namespace Decorator
 {
-
-	public abstract class CaffeineBeverage
-	{
-		protected void prepare()
-		{
-			boilWater();
-			brew();
-			pourInCup();
-			if (customerWantsCondiments())
-			{
-				addCondiments();
-			}
-		}
-
-		void boilWater() {
-			Console.WriteLine("Boil water");
-		}
-		public abstract void brew();
-		void pourInCup() {
-			Console.WriteLine("Pour in cup");
-		}
-		public abstract void addCondiments();
-
-		public virtual bool customerWantsCondiments()
-		{
-			return true;
-		}
-	}
-
-
-	public class Coffe : CaffeineBeverage
-	{
-		public Coffe()
+    
+    class Cook
+    {
+        public void CutSomething()
         {
-			this.prepare();
+            Console.WriteLine("Cut something");
         }
-		
-		public override void brew() {
-			Console.WriteLine("Brew coffe");
-		}
-		public override void addCondiments() {
-			Console.WriteLine("Add cream");
-		}
-	}
-
-
-	public class Tea : CaffeineBeverage
-	{
-		public Tea()
+        public void Mix()
         {
-			prepare();
+            Console.WriteLine("mixing something");
         }
-		public override void brew()
-		{
-			Console.WriteLine("Brew Tea");
-		}
-		public override void addCondiments()
-		{
-			Console.WriteLine("Add milk");
-		}
-	}
+        public void TakeProduct()
+        {
+            Console.WriteLine("Taking something product");
+        }
+        public void PutInPot()
+        {
+            Console.WriteLine("Put something in put");
+        }
+    }
+    class Stove
+    {
+        public void TurnOn(int i)
+        {
+            Console.WriteLine("Heating stove number:" + i);
+        }
 
+        public void TurnOf(int i)
+        {
+            Console.WriteLine("cool dawn stove number:" + i);
+        }
+    }
+    class Pot
+    {
+        public void Open()
+        {
+            Console.WriteLine("opening");
+        }
+        public void Close()
+        {
+            Console.WriteLine("Closing");
+        }
+    }
 
-	public class DarkCoffe : Coffe
-	{
-		
-		public override bool customerWantsCondiments() {
-			return false;
-		}
-	}
+    class MakeLunchFacade
+    {
+        Pot pot = new Pot();
+        Stove stove = new Stove();
+        Cook cook = new Cook();
+        public MakeLunchFacade(Pot pot, Stove stove, Cook cook)
+        {
+            this.pot = pot;
+            this.stove = stove;
+            this.cook = cook;
+        }
+        public void Start()
+        {
+            stove.TurnOn(1);
+            cook.TakeProduct();
+           
+        }
 
-	public class MyCoffe : Coffe
-	{
-	private bool isCondimentsRequired;
-		
+        public void Coking()
+        {
+            cook.CutSomething();
+            pot.Open();
+            cook.PutInPot();
+            pot.Close();
 
-	public MyCoffe(bool isCondimentsRequired)
-	{
-		this.isCondimentsRequired = isCondimentsRequired;
-		prepare();
-	}
+        }
 
-	
-	public override bool customerWantsCondiments()
-	{
-		return isCondimentsRequired;
-	}
-}
+        public void Stop()
+        {
+            stove.TurnOf(1);
+        }
+    }
 
-class Program
+    class SmartHome
+    {
+        public void CreateLunch(MakeLunchFacade facade)
+        {
+            facade.Start();
+            facade.Coking();
+            facade.Stop();
+        }
+    }
+
+        class main
     {
         static void Main(string[] args)
         {
-			//Coffe coffe = new Coffe();
-			//MyCoffe mycoffe = new MyCoffe(true);
-			//DarkCoffe darkCoffe = new DarkCoffe();
-			Tea tea = new Tea();
+            SmartHome smartHome = new SmartHome();
+            Pot pot = new Pot();
+            Stove stove = new Stove();
+            Cook cook = new Cook();
+            MakeLunchFacade makeLunchFacade = new MakeLunchFacade(pot, stove, cook);
+            smartHome.CreateLunch(makeLunchFacade);
+
         }
     }
 }
